@@ -1,11 +1,12 @@
 export default class Server {
   constructor() {
-    this.url = 'https://ahj-sw-news.herokuapp.com/news';
+    this.url = 'http://localhost:3000/news';
   }
 
   async loadNews() {
     try {
       const news = await fetch(this.url);
+      console.log(news.ok);
       return news.json();
     } catch (error) {
       console.log(error);
