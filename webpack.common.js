@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { InjectManifest } = require('workbox-webpack-plugin');
 
 module.exports = {
   target: 'web',
@@ -11,6 +10,15 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /service.worker\.js$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+          },
+        }
+      },
       {
         test: /\.worker\.js$/,
         use: {
@@ -64,15 +72,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
-    }),
-    // new WorkboxPlugin.GenerateSW({
-    //   clientsClaim: true,
-    //   skipWaiting: true,
-    //   cleanupOutdatedCaches: true
-    // }),
-      new InjectManifest({
-        swSrc: './src/js/service.worker.js',
-        swDest: 'service-worker.js',
     }),
   ],
 };
