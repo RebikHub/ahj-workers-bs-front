@@ -1,65 +1,60 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-globals */
+/* eslint-disable import/no-extraneous-dependencies */
+import { registerRoute } from 'workbox-routing';
+import {
+  NetworkFirst,
+  StaleWhileRevalidate,
+  CacheFirst,
+} from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { precacheAndRoute } from 'workbox-precaching';
 
-// const cacheName = 'ahj-workers-bs';
+precacheAndRoute(self.__WB_MANIFEST);
 
-// const files = [
-//   '/',
-//   '/img/js.png',
-//   '/js/app.js',
-// ];
+// Cache page navigations (html) with a Network First strategy
+registerRoute(
+  // Check to see if the request is a navigation to a new page
+  ({ request }) => {
+    console.log(request);
+    return request.mode === 'navigate';
+  },
+  // Use a Network First caching strategy
+  new NetworkFirst({
+    // Put all cached files in a cache named 'pages'
+    cacheName: 'pages',
+    plugins: [
+      // Ensure that only requests that result in a 200 status are cached
+      new CacheableResponsePlugin({
+        statuses: [200],
+      }),
+    ],
+  }),
+);
 
-// async function putFilesToCache(file) {
-//   const cache = await caches.open(cacheName);
-//   await cache.addAll(file);
-// }
+// Cache CSS, JS, and Web Worker requests with a Stale While Revalidate strategy
+registerRoute(
+  // Check to see if the request's destination is style for stylesheets, script for JavaScript, or worker for web worker
+  ({ request }) => request.destination === 'style'
+    || request.destination === 'script'
+    || request.destination === 'worker',
+  // Use a Stale While Revalidate caching strategy
+  new StaleWhileRevalidate({
+    // Put all cached files in a cache named 'assets'
+    cacheName: 'assets',
+    plugins: [
+      // Ensure that only requests that result in a 200 status are cached
+      new CacheableResponsePlugin({
+        statuses: [200],
+      }),
+    ],
+  }),
+);
 
-// async function removeOldCache(retain) {
-//   const keys = await caches.keys();
-//   return Promise.all(
-//     keys.filter((key) => !retain.includes(key))
-//       .map((key) => caches.delete(key)),
-//   );
-// }
-
-// self.addEventListener('install', (evt) => {
-//   console.log(evt);
-//   evt.waitUntil((async () => {
-//     await putFilesToCache(files);
-//     await self.skipWaiting();
-//   })());
-// });
-
-// self.addEventListener('activate', (evt) => {
-//   console.log(evt);
-//   evt.waitUntil((async () => {
-//     await removeOldCache([cacheName]);
-//     await self.clients.claim();
-//   })());
-// });
-
-// self.addEventListener('fetch', (evt) => {
-//   const requestUrl = new URL(evt.request.url);
-
-//   if (requestUrl.pathname.startsWith('/news')) {
-//     return;
-//   }
-
-//   evt.respondWith((async () => {
-//     const cache = await caches.open(cacheName);
-//     const cachedResponse = await cache.match(evt.request);
-
-//     if (cachedResponse) {
-//       return cachedResponse;
-//     }
-
-//     return fetch(evt.request);
-//   })());
-// });
-
-self.addEventListener('install', (ev) => {
-  console.log(ev);
-});
-
-self.addEventListener('activate', (ev) => {
-  console.log(ev);
-})
+registerRoute(
+  ({ url }) => url.pathname.startsWith('/news'),
+  new CacheFirst({
+    // Put all cached files in a cache named 'images'
+    cacheName: 'pages',
+  }),
+);
