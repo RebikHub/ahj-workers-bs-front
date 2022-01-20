@@ -1,10 +1,10 @@
 const cacheName = 'ahj-cache-v1';
 
-// const cacheFiles = [
-//   'index.html',
-//   '/js/app.js',
-//   '/css/style.css',
-// ];
+const cacheFiles = [
+  '/',
+  '/img/js.png',
+  '/js/app.js',
+];
 
 // async function putFilesToCache(files) {
 //   const cache = await caches.open(cacheName);
@@ -52,13 +52,13 @@ self.addEventListener('fetch', (evt) => {
 
       if (response.statusText === 'OK') {
         evt.waitUntil(cache.put(evt.request, response.clone()));
-        console.log(`Данные загружены из сервера. Статус ответа: ${response.status}.`)
+        console.log(`Данные загружены из сервера. Статус ответа: ${response.status}.`);
         return response;
       }
 
       const cachedResponse = await cache.match(evt.request);
       if (cachedResponse) {
-        console.log(`Данные загружены из кэша. Статус ответа: ${response.status}`)
+        console.log(`Данные загружены из кэша. Статус ответа: ${response.status}`);
         return cachedResponse;
       }
     } catch (err) {
