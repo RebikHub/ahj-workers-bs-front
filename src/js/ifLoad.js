@@ -9,28 +9,20 @@ export default class Loading {
   }
 
   events() {
-    // Loading.registerSW();
     this.renderWaitNews();
     this.responseNews();
     this.clickBtnUpdate();
+    this.errorServiceWorker();
   }
 
-  static registerSW() {
-    (async () => {
-      try {
-        if (navigator.serviceWorker) {
-          await navigator.serviceWorker.register('./service.worker.js');
-          console.log('sw registered');
+  errorServiceWorker() {
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.addEventListener('message', (evt) => {
+        if (evt.data === 'error') {
+          this.noResponse.classList.remove('none');
         }
-      } catch (e) {
-        console.log(e);
-      }
-    })();
-    // if (navigator.serviceWorker) {
-    //   navigator.serviceWorker.addEventListener('message', (evt) => {
-    //     console.log(evt.data === 'error');
-    //   })
-    // }
+      });
+    }
   }
 
   async responseNews() {
