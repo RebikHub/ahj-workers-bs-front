@@ -7,6 +7,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
   target: 'web',
   entry: {
+    'app': path.resolve(__dirname, 'src/index.js'),
     'service-worker': path.resolve(__dirname, 'src/js/service.worker.js'),
   },
   output: {
@@ -16,7 +17,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /service-worker\.js$/,
+        test: /service.worker\.js$/,
         use: {
           loader: 'file-loader',
           options: {
