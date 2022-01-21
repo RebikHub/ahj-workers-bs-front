@@ -12,7 +12,7 @@ load.events();
   if (navigator.serviceWorker) {
     window.addEventListener('load', async () => {
       try {
-        await navigator.serviceWorker.register('ahj-workers-bs-front/service-worker.js');
+        await navigator.serviceWorker.register('service-worker.js');
         console.log('sw registered');
       } catch (e) {
         console.log(e);
