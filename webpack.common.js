@@ -2,29 +2,26 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
-// const { InjectManifest } = require('workbox-webpack-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   target: 'web',
-  entry: {
-    'app': path.resolve(__dirname, 'src/index.js'),
-    'service-worker': path.resolve(__dirname, 'src/js/service.worker.js'),
-  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
   },
   module: {
     rules: [
-      {
-        test: /service.worker\.js$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-          },
-        }
-      },
+      // {
+      //   test: /\.worker\.js$/,
+      //   use: {
+      //     loader: 'file-loader',
+      //     options: {
+      //       name: '[name].[ext]',
+      //     },
+      //   }
+      // },
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -41,7 +38,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.css$/,
+        test: /\.css$/i,
         use: [
           MiniCssExtractPlugin.loader, 'css-loader',
         ],
@@ -62,6 +59,10 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.txt$/,
+        use: 'raw-loader'
+      },
     ],
   },
   optimization: {
@@ -77,9 +78,10 @@ module.exports = {
       filename: '[name].css',
       chunkFilename: '[id].css',
     }),
-    // new InjectManifest({
-    //   swSrc: './src/js/service.worker.js',
-    //   swDest: 'dist/service-worker.js',
-    // }),
+    new InjectManifest({
+      swSrc: './src/js/service.worker.js',
+      swDest: 'service-worker.js',
+    }),
+    new CleanWebpackPlugin(),
   ],
 };

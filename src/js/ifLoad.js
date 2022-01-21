@@ -12,17 +12,6 @@ export default class Loading {
     this.renderWaitNews();
     this.responseNews();
     this.clickBtnUpdate();
-    this.errorServiceWorker();
-  }
-
-  errorServiceWorker() {
-    if (navigator.serviceWorker) {
-      navigator.serviceWorker.addEventListener('message', (evt) => {
-        if (evt.data === 'error') {
-          this.noResponse.classList.remove('none');
-        }
-      });
-    }
   }
 
   async responseNews() {

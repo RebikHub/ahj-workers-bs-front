@@ -6,7 +6,6 @@ export default class Server {
   async loadNews() {
     try {
       const news = await fetch(this.url);
-      console.log(news);
       return news.json();
     } catch (error) {
       console.log(error);
