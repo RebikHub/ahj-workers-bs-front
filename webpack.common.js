@@ -6,8 +6,7 @@ const { InjectManifest } = require('workbox-webpack-plugin');
 module.exports = {
   target: 'web',
   output: {
-    path: path.resolve(__dirname, '/dist'),
-    publicPath: '',
+    path: path.resolve(__dirname, 'dist'),
   },
   module: {
     rules: [
