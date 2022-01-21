@@ -16,7 +16,7 @@ const myPlugin = {
 };
 
 registerRoute(
-  'https://rebikhub.github.io/ahj-workers-bs-front/',
+  ({ url }) => url.pathname.startsWith('/ahj-workers-bs-front/'),
   new NetworkFirst({
     plugins: [
       new CacheableResponsePlugin({
