@@ -1,6 +1,6 @@
 export default class Server {
   constructor() {
-    this.url = 'http://localhost:3333/news';
+    this.url = 'https://ahj-sw-news-back.herokuapp.com/news';
   }
 
   async loadNews() {
